@@ -1,0 +1,3 @@
+# alx-project-0x01-setup
+# Something I am yet to comprehend...
+# A lot of content too
