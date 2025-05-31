@@ -5,6 +5,20 @@ export interface PostProps {
   title: string;
   body: string;
 }
+
+// PostData: used for creating/updating posts
+export interface PostData {
+  userId: number;
+  title: string;
+  body: string;
+}
+
+// Props passed to the PostModal component
+export interface PostModalProps {
+  onClose: () => void;
+  onSubmit: (data: PostData) => void;
+}
+
 // To parse this data:
 //
 //   import { Convert, Welcome } from "./file";
