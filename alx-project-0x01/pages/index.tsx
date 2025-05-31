@@ -1,24 +1,61 @@
+import React, { useState } from "react";
 import Header from "@/components/layout/Header";
+import UserModal from "@/components/common/UserModal";
+import { UserData } from "@/interfaces";
 
-const Home: React.FC = () => {
+const UsersPage: React.FC = () => {
+  const [users, setUsers] = useState<UserData[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleAddUser = (newUser: UserData) => {
+    // Optionally assign an id (e.g. length + 1)
+    const userWithId = { ...newUser, id: users.length + 1 };
+    setUsers([...users, userWithId]);
+    setIsModalOpen(false); // close modal after adding
+  };
+
   return (
     <div className="flex flex-col h-screen">
       <Header />
-      <main className="flex-grow flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600">
-        <div className="text-center">
-          <h1 className="text-5xl font-bold text-white">
-            Welcome to our Application!
-          </h1>
-          <p className="mt-4 text-xl text-white">
-            We're glad you're here. Explore and enjoy your experience.
-          </p>
-          <button className="mt-6 px-6 py-3 bg-white text-blue-500 rounded-full font-semibold hover:bg-gray-200 transition">
-            Get Started
+      <main className="p-4 flex flex-col flex-grow">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-semibold">Users</h1>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-700 px-4 py-2 rounded-full text-white"
+          >
+            Add User
           </button>
-            </div>
+        </div>
+
+        <div className="overflow-auto flex-grow">
+          {users.length === 0 ? (
+            <p>No users yet. Click "Add User" to create one.</p>
+          ) : (
+            <ul>
+              {users.map((user) => (
+                <li key={user.id} className="mb-2 border p-2 rounded">
+                  <p><strong>{user.name}</strong> ({user.username})</p>
+                  <p>{user.email}</p>
+                  <p>{user.phone}</p>
+                  <p>{user.website}</p>
+                  <p>{user.address.city}, {user.address.street}</p>
+                  <p>Company: {user.company.name}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        {isModalOpen && (
+          <UserModal
+            onClose={() => setIsModalOpen(false)}
+            onSubmit={handleAddUser}
+          />
+        )}
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Home;
+export default UsersPage;
