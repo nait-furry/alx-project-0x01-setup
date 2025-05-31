@@ -1,6 +1,6 @@
 import PostCard from "@/components/common/PostCard";
 import Header from "@/components/layout/Header";
-import { PostProps, PostData } from "@/interfaces";
+//import { PostProps, PostData } from "@/interfaces";
 import PostModal from "@/components/common/PostModal";
 import { useState } from "react";
 
@@ -10,13 +10,14 @@ interface PostsComponentProps {
   posts: PostProps[]; // 🔁 use imported PostProps array here
 }
 
-const Posts: React.FC<PostsComponentProps> = ({ posts }) => {
+const Posts: React.FC<{ posts: PostProps[] }> = ({ posts }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  // If you want to track new posts fully, use PostProps
   const [post, setPost] = useState<PostProps | null>(null);
-
 
   const handleAddPost = (newPost: PostData) => {
     setPost({ ...newPost, id: posts.length + 1 });
+    setModalOpen(false);
   };
 
 
@@ -55,6 +56,22 @@ export async function getStaticProps() {
       posts
     }
   }
+}
+
+export interface PostData {
+  userId: number;
+  title: string;
+  body: string;
+  id?: number; // optional, because new posts may not have an id yet
+}
+
+export interface PostProps extends PostData {
+  id: number; // required because these come from API and always have ids
+}
+
+export interface PostModalProps {
+  onClose: () => void;
+  onSubmit: (post: PostData) => void;
 }
 
 export default Posts;
